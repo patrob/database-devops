@@ -11,10 +11,15 @@ on:
                 required: true
             sqlserver_database:
                 required: true
+        inputs:
+            env:
+                required: true
+                type: string
 jobs:
     flyway-verify:
         name: Flyway PR Verify
         runs-on: ubuntu-latest
+        environment: ${{ inputs.env }}
 
         steps:
             - name: Checkout

@@ -13,6 +13,8 @@ jobs:
     flyway-pr-dev:
         name: Flyway PR Verify
         uses: ./.github/workflows/step-flyway-pr-verify.yml
+        with:
+            env: dev
         secrets:
             sqlserver_username: ${{ secrets.SQLSERVER_USERNAME_DEV }}
             sqlserver_password: ${{ secrets.SQLSERVER_PASSWORD_DEV }}
