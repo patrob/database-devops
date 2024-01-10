@@ -7,7 +7,8 @@ on:
             - main
 
 jobs:
-    build:
+    verify:
+        name: Flyway PR Verify
         runs-on: ubuntu-latest
 
         steps:
