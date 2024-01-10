@@ -13,7 +13,7 @@ jobs:
 
         steps:
             - name: Checkout code
-              uses: actions/checkout@v2
+              uses: actions/checkout@v3
 
             # Don't have a DB anywhere to test against yet.
             # - name: Flyway validate
@@ -26,6 +26,6 @@ jobs:
             #       -ignoreMigrationPatterns='*:pending'
             #       validate
 
-            - name: Build and run Docker Compose
+            - name: Run Flyway on SQL Server DB Container
               run: >
                   docker compose up --force-recreate -d && sleep 5 && docker compose logs && docker compose logs | (! grep ERROR &>/dev/null)
