@@ -57,7 +57,7 @@ jobs:
             - name: Flyway Validate
               run: >
                   docker run -v $(pwd)/sql/:/flyway/sql flyway/flyway:9.22-alpine
-                  -url="jdbc:sqlserver://${{ secrets.sqlserver_url }}:1433;databaseName=${{ secrets.sqlserver_database }};encrypt=true;trustServerCertifiate=true;"
+                  -url="jdbc:sqlserver://${{ secrets.sqlserver_url }}:1433;database=${{ secrets.sqlserver_database }};encrypt=true;trustServerCertifiate=true;"
                   -user=${{ secrets.sqlserver_username }}
                   -password=${{ secrets.sqlserver_password }}
                   -connectRetries=1
@@ -74,9 +74,7 @@ jobs:
                       az sql server firewall-rule delete  \
                       --name "GitHub Runner IP" \
                       --resource-group ${{ inputs.resource_group }} \
-                      --server ${{ inputs.sqlserver_name }} \
-                      --start-ip-address ${{ steps.ip.outputs.ipv4 }} \
-                      --end-ip-address ${{ steps.ip.outputs.ipv4 }}
+                      --server ${{ inputs.sqlserver_name }}
 
             - name: Run Flyway on SQL Server DB Container
               run: >
