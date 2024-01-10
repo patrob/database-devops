@@ -1,0 +1,19 @@
+name: "Flyway PR"
+
+on:
+    pull_request:
+        branches:
+            - main
+        paths:
+            - "sql/**"
+            - ".github/workflows/*flyway*.yml"
+
+jobs:
+    flyway-pr-dev:
+        name: Flyway PR Verify
+        uses: ./.github/workflows/step-flyway-pr-verify.yml
+        secrets:
+            sqlserver_username: ${{ secrets.SQLSERVER_USERNAME_DEV }}
+            sqlserver_password: ${{ secrets.SQLSERVER_PASSWORD_DEV }}
+            sqlserver_url: ${{ secrets.SQLSERVER_URL_DEV }}
+            sqlserver_database: ${{ secrets.SQLSERVER_DATABASE_DEV }}
