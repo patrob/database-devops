@@ -1,0 +1,6 @@
+CREATE TABLE Users
+(
+    Id BIGINT NOT NULL,
+    Name VARCHAR(255) NOT NULL,
+    PRIMARY KEY (Id)
+)

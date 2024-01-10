@@ -1,0 +1,29 @@
+name: PR Flyway Validate
+
+on:
+    pull_request:
+        branches:
+            - main
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+
+            # Don't have a DB anywhere to test against yet.
+            # - name: Flyway validate
+            #   run: >
+            #       docker run -v $(pwd)/sql/:/flyway/sql flyway/flyway:9.22-alpine
+            #       -url="jdbc:sqlserver://${{ secrets.sqlserver_url }}:1433;User Id=${{ secrets.sqlserver_username }};databaseName=${{ secrets.sqlserver_database }};encrypt=true;trustServerCertifiate=true;"
+            #       -password=${{ secrets.sqlserver_password }}
+            #       -connectRetries=1
+            #       -validateMigrationNaming=true
+            #       -ignoreMigrationPatterns='*:pending'
+            #       validate
+
+            - name: Build and run Docker Compose
+              run: >
+                  docker compose up --force-recreate -d && sleep 5 && docker compose logs && docker compose logs | (! grep ERROR &>/dev/null)

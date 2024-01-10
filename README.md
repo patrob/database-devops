@@ -19,5 +19,5 @@ I created this repo to share a lesson I learned when getting started with Flyway
 4. Connect to the DB using SSMS or ADS
     - Server: localhost,1433
     - Username: sa
-    - Password: (set in the .env file)
+    - Password: Password123!
 5. Verify that the DB is up and running
