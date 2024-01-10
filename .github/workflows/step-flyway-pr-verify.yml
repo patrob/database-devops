@@ -20,16 +20,15 @@ jobs:
             - name: Checkout
               uses: actions/checkout@1.0.0
 
-            # Don't have a DB anywhere to test against yet.
-            # - name: Flyway validate
-            #   run: >
-            #       docker run -v $(pwd)/sql/:/flyway/sql flyway/flyway:9.22-alpine
-            #       -url="jdbc:sqlserver://${{ secrets.sqlserver_url }}:1433;User Id=${{ secrets.sqlserver_username }};databaseName=${{ secrets.sqlserver_database }};encrypt=true;trustServerCertifiate=true;"
-            #       -password=${{ secrets.sqlserver_password }}
-            #       -connectRetries=1
-            #       -validateMigrationNaming=true
-            #       -ignoreMigrationPatterns='*:pending'
-            #       validate
+            - name: Flyway Validate
+              run: >
+                  docker run -v $(pwd)/sql/:/flyway/sql flyway/flyway:9.22-alpine
+                  -url="jdbc:sqlserver://${{ secrets.sqlserver_url }}:1433;User Id=${{ secrets.sqlserver_username }};databaseName=${{ secrets.sqlserver_database }};encrypt=true;trustServerCertifiate=true;"
+                  -password=${{ secrets.sqlserver_password }}
+                  -connectRetries=1
+                  -validateMigrationNaming=true
+                  -ignoreMigrationPatterns='*:pending'
+                  validate
 
             - name: Run Flyway on SQL Server DB Container
               run: >
