@@ -11,8 +11,16 @@ on:
                 required: true
             sqlserver_database:
                 required: true
+            azure_credentials:
+                required: true
         inputs:
             env:
+                required: true
+                type: string
+            resource_group:
+                required: true
+                type: string
+            sqlserver_name:
                 required: true
                 type: string
 jobs:
@@ -25,6 +33,24 @@ jobs:
             - name: Checkout
               uses: actions/checkout@1.0.0
 
+            - name: Login to Azure
+              uses: azure/login@v1
+              with:
+                  creds: ${{ secrets.azure_credentials }}
+
+            - name: Whitelist GitHub Runner IP
+              uses: azure/CLI@v1
+              with:
+                  inlineScript: |
+                      set -eu
+                      agentIP=$(curl -s https://api.ipify.org/)
+                      az sql server firewall-rule create \
+                      --name "GitHub Runner IP" \
+                      --resource-group ${{ inputs.resource_group }} \
+                      --server ${{ inputs.sqlserver_name }} \
+                      --ip-address $agentIP
+                      sleep 300
+
             - name: Flyway Validate
               run: >
                   docker run -v $(pwd)/sql/:/flyway/sql flyway/flyway:9.22-alpine
@@ -35,6 +61,19 @@ jobs:
                   -validateMigrationNaming=true
                   -ignoreMigrationPatterns='*:pending'
                   validate
+
+            - name: Remove GitHub Runner IP from Whitelist
+              if: always()
+              uses: azure/CLI@v1
+              with:
+                  inlineScript: |
+                      set -eu
+                      agentIP=$(curl -s https://api.ipify.org/)
+                      az sql server firewall-rule delete  \
+                      --name "GitHub Runner IP" \
+                      --resource-group ${{ inputs.resource_group }} \
+                      --server ${{ inputs.sqlserver_name }} \
+                      --ip-address $agentIP
 
             - name: Run Flyway on SQL Server DB Container
               run: >

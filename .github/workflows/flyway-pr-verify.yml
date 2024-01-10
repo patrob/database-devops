@@ -15,8 +15,11 @@ jobs:
         uses: ./.github/workflows/step-flyway-pr-verify.yml
         with:
             env: "dev"
+            resource_group: "onpar-demo-rg"
+            sqlserver_name: "onpar-demo-sql"
         secrets:
             sqlserver_username: ${{ secrets.SQLSERVER_USERNAME_DEV }}
             sqlserver_password: ${{ secrets.SQLSERVER_PASSWORD_DEV }}
             sqlserver_url: ${{ secrets.SQLSERVER_URL_DEV }}
             sqlserver_database: ${{ secrets.SQLSERVER_DATABASE_DEV }}
+            azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
