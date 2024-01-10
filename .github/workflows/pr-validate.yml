@@ -1,6 +1,7 @@
 name: PR Flyway Validate
 
 on:
+    workflow_dispatch:
     pull_request:
         branches:
             - main
