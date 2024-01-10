@@ -51,7 +51,8 @@ jobs:
                       --name "GitHub Runner IP" \
                       --resource-group ${{ inputs.resource_group }} \
                       --server ${{ inputs.sqlserver_name }} \
-                      --ip-address ${{ steps.ip.outputs.ipv4 }}
+                      --start-ip-address ${{ steps.ip.outputs.ipv4 }} \
+                      --end-ip-address ${{ steps.ip.outputs.ipv4 }}
                       sleep 300
 
             - name: Flyway Validate
@@ -75,7 +76,8 @@ jobs:
                       --name "GitHub Runner IP" \
                       --resource-group ${{ inputs.resource_group }} \
                       --server ${{ inputs.sqlserver_name }} \
-                      --ip-address ${{ steps.ip.outputs.ipv4 }}
+                      --start-ip-address ${{ steps.ip.outputs.ipv4 }} \
+                      --end-ip-address ${{ steps.ip.outputs.ipv4 }}
 
             - name: Run Flyway on SQL Server DB Container
               run: >
