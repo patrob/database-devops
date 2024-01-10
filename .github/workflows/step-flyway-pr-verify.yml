@@ -25,6 +25,13 @@ jobs:
             - name: Checkout
               uses: actions/checkout@1.0.0
 
+            - name: Are Secrets Set?
+              run: |
+                  echo "sqlserver_url: ${{ secrets.sqlserver_url }}"
+                  echo "sqlserver_username: ${{ secrets.sqlserver_username }}"
+                  echo "sqlserver_password: ${{ secrets.sqlserver_password }}"
+                  echo "sqlserver_database: ${{ secrets.sqlserver_database }}"
+
             - name: Flyway Validate
               run: >
                   docker run -v $(pwd)/sql/:/flyway/sql flyway/flyway:9.22-alpine
