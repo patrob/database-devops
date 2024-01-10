@@ -38,17 +38,20 @@ jobs:
               with:
                   creds: ${{ secrets.azure_credentials }}
 
+            - name: Public IP
+              id: ip
+              uses: haythem/public-ip@v1.3
+
             - name: Whitelist GitHub Runner IP
               uses: azure/CLI@v1
               with:
                   inlineScript: |
                       set -eu
-                      agentIP=$(curl -s https://api.ipify.org/)
                       az sql server firewall-rule create \
                       --name "GitHub Runner IP" \
                       --resource-group ${{ inputs.resource_group }} \
                       --server ${{ inputs.sqlserver_name }} \
-                      --ip-address $agentIP
+                      --ip-address ${{ steps.ip.outputs.ipv4 }}
                       sleep 300
 
             - name: Flyway Validate
@@ -68,12 +71,11 @@ jobs:
               with:
                   inlineScript: |
                       set -eu
-                      agentIP=$(curl -s https://api.ipify.org/)
                       az sql server firewall-rule delete  \
                       --name "GitHub Runner IP" \
                       --resource-group ${{ inputs.resource_group }} \
                       --server ${{ inputs.sqlserver_name }} \
-                      --ip-address $agentIP
+                      --ip-address ${{ steps.ip.outputs.ipv4 }}
 
             - name: Run Flyway on SQL Server DB Container
               run: >
