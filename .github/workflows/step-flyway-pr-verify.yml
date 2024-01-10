@@ -53,7 +53,6 @@ jobs:
                       --server ${{ inputs.sqlserver_name }} \
                       --start-ip-address ${{ steps.ip.outputs.ipv4 }} \
                       --end-ip-address ${{ steps.ip.outputs.ipv4 }}
-                      sleep 300
 
             - name: Flyway Validate
               run: >
