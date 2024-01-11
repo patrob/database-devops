@@ -55,7 +55,7 @@ jobs:
             - name: Flyway Validate
               run: >
                   docker run -v $(pwd)/sql/:/flyway/sql flyway/flyway:9.22-alpine
-                  -url="jdbc:sqlserver://${{inputs.sqlserver_name}}.database.windows.net;database=${{ secrets.sqlserver_database }};encrypt=true;trustServerCertifiate=true;"
+                  -url="jdbc:sqlserver://${{inputs.sqlserver_name}}.database.windows.net;database=${{ secrets.sqlserver_database }};"
                   -user=${{ secrets.sqlserver_username }}
                   -password=${{ secrets.sqlserver_password }}
                   -connectRetries=1
