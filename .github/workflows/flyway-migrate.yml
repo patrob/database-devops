@@ -1,0 +1,24 @@
+name: "Flyway PR"
+
+on:
+    workflow_dispatch:
+    push:
+        branches:
+            - main
+        paths:
+            - "sql/**"
+            - ".github/workflows/*flyway*.yml"
+
+jobs:
+    flyway-migrate-dev:
+        name: Flyway PR Migrate
+        uses: ./.github/workflows/step-flyway-migrate.yml
+        with:
+            env: "dev"
+            resource_group: "onpar-demo-rg"
+            sqlserver_name: "onpar-demo-sql"
+        secrets:
+            sqlserver_username: ${{ secrets.SQLSERVER_USERNAME_DEV }}
+            sqlserver_password: ${{ secrets.SQLSERVER_PASSWORD_DEV }}
+            sqlserver_database: ${{ secrets.SQLSERVER_DATABASE_DEV }}
+            azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}

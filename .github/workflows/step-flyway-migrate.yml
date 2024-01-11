@@ -1,0 +1,75 @@
+name: PR Flyway Validate
+
+on:
+    workflow_call:
+        secrets:
+            sqlserver_username:
+                required: true
+            sqlserver_password:
+                required: true
+            sqlserver_database:
+                required: true
+            azure_credentials:
+                required: true
+        inputs:
+            env:
+                required: true
+                type: string
+            resource_group:
+                required: true
+                type: string
+            sqlserver_name:
+                required: true
+                type: string
+jobs:
+    flyway-migrate:
+        name: Flyway Migrate
+        runs-on: ubuntu-latest
+        environment: ${{ inputs.env }}
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@1.0.0
+
+            - name: Login to Azure
+              uses: azure/login@v1
+              with:
+                  creds: ${{ secrets.azure_credentials }}
+
+            - name: Public IP
+              id: ip
+              uses: haythem/public-ip@v1.3
+
+            - name: Whitelist GitHub Runner IP
+              uses: azure/CLI@v1
+              with:
+                  inlineScript: |
+                      set -eu
+                      az sql server firewall-rule create \
+                      --name "GitHub Runner IP" \
+                      --resource-group ${{ inputs.resource_group }} \
+                      --server ${{ inputs.sqlserver_name }} \
+                      --start-ip-address ${{ steps.ip.outputs.ipv4 }} \
+                      --end-ip-address ${{ steps.ip.outputs.ipv4 }}
+
+            - name: Flyway Migrate
+              run: >
+                  docker run -v $(pwd)/sql/:/flyway/sql flyway/flyway:10-azure flyway
+                  -url='jdbc:sqlserver://${{inputs.sqlserver_name}}.database.windows.net;databaseName=${{ secrets.sqlserver_database }};'
+                  -user=${{ secrets.sqlserver_username }}
+                  -password=${{ secrets.sqlserver_password }}
+                  -connectRetries=1
+                  -validateMigrationNaming=true
+                  -ignoreMigrationPatterns='*:pending'
+                  migrate
+
+            - name: Remove GitHub Runner IP from Whitelist
+              if: always()
+              uses: azure/CLI@v1
+              with:
+                  inlineScript: |
+                      set -eu
+                      az sql server firewall-rule delete  \
+                      --name "GitHub Runner IP" \
+                      --resource-group ${{ inputs.resource_group }} \
+                      --server ${{ inputs.sqlserver_name }}
