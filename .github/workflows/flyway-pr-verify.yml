@@ -2,6 +2,11 @@ name: "Flyway PR"
 
 on:
     workflow_dispatch:
+    push:
+        branches: -main
+        paths:
+            - "sql/**"
+            - ".github/workflows/*flyway*.yml"
     pull_request:
         branches:
             - main
