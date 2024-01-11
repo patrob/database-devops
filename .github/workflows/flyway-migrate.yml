@@ -1,4 +1,4 @@
-name: "Flyway PR"
+name: "Flyway Migrate"
 
 on:
     workflow_dispatch:

@@ -1,4 +1,4 @@
-name: PR Flyway Validate
+name: PR Flyway Validate Step
 
 on:
     workflow_call:
