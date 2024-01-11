@@ -11,7 +11,7 @@ on:
 
 jobs:
     flyway-migrate-dev:
-        name: Flyway PR Migrate
+        name: Flyway Migrate
         uses: ./.github/workflows/step-flyway-migrate.yml
         with:
             env: "dev"
